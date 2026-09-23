@@ -17,3 +17,7 @@ httpx>=0.28.1
 yt-dlp>=2026.8.19
 opencv-python-headless
 numpy
+
+playwright
+supabase
+duckduckgo-search

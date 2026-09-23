@@ -17,6 +17,10 @@ RUN apt-get update --fix-missing && apt-get install -y \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Instalar los binarios del navegador para Playwright
+RUN playwright install chromium
+RUN playwright install-deps chromium
+
 # Copiar código fuente
 COPY . .
 
