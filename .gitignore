@@ -20,7 +20,6 @@ temp_upload_*
 *.pdf
 add_qrs*.py
 debug_*.py
-deep_scanner.py
 get_cats.py
 get_plazavea*.py
 get_tottus*.py
@@ -32,6 +31,3 @@ scraper_*.py
 test_*.py
 update_*.py
 ftp_uploader.py
-excel_exporter.py
-html_exporter.py
-db.py
