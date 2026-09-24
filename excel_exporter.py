@@ -228,10 +228,9 @@ def generate_inventory_excel(products: List[Dict[str, Any]]) -> io.BytesIO:
         try:
             image_url = product.get('image_url')
             if image_url:
-                # Cargar imagen real desde el frontend public
-                import os
-                base_public = r"C:\Users\hp\.gemini\antigravity-ide\scratch\Inventario Por Imagenes\frontend\public"
-                img_path = os.path.join(base_public, image_url.lstrip("/\\"))
+                # Solo intentar si es una ruta local válida o accesible, pero por ahora en la web fallará
+                # gracefulmente y usará el emoji.
+                img_path = image_url
                 
                 # Check if it exists and use it
                 if os.path.exists(img_path):
