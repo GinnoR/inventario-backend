@@ -9,6 +9,8 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
+    ruc = Column(String, nullable=True)
+    giro = Column(String, nullable=True)
     credits = Column(Integer, default=5) # 5 créditos gratis al registrarse
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
     
