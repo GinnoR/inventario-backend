@@ -19,6 +19,25 @@ load_dotenv()
 # Crear tablas de la base de datos
 models.Base.metadata.create_all(bind=engine)
 
+# Migración automática: agregar columnas faltantes si la BD es antigua
+def run_migrations():
+    from sqlalchemy import text
+    with engine.connect() as conn:
+        # Verificar y agregar columna 'ruc'
+        try:
+            conn.execute(text("ALTER TABLE users ADD COLUMN ruc VARCHAR"))
+            conn.commit()
+        except Exception:
+            pass  # Ya existe
+        # Verificar y agregar columna 'giro'
+        try:
+            conn.execute(text("ALTER TABLE users ADD COLUMN giro VARCHAR"))
+            conn.commit()
+        except Exception:
+            pass  # Ya existe
+
+run_migrations()
+
 app = FastAPI(title="Caserita Smart - AI Backend SaaS")
 
 app.include_router(auth.router)
@@ -26,15 +45,8 @@ app.include_router(auth.router)
 # Habilitar CORS para que el frontend pueda comunicarse
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://10.26.1.167:3000",
-        "http://192.168.56.1:3000",
-        "https://frontend-three-kappa-24.vercel.app",       # Vercel alias
-        "https://frontend-1zybkqbu7-ginno-riveras-projects.vercel.app",  # Vercel deploy
-        "https://*.vercel.app",                              # Cualquier deploy de Vercel
-    ],
-    allow_credentials=True,
+    allow_origins=["*"],  # Permite todos los orígenes (Vercel, localhost, móvil, etc.)
+    allow_credentials=False,  # Debe ser False cuando allow_origins=["*"]
     allow_methods=["*"],
     allow_headers=["*"],
     expose_headers=["Content-Disposition"],
