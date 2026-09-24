@@ -216,8 +216,6 @@ def generate_inventory_html(products: List[Dict[str, Any]]) -> str:
                 <tbody>
     """
     
-    base_public = r"C:\Users\hp\.gemini\antigravity-ide\scratch\Inventario Por Imagenes\frontend\public"
-    
     for idx, p in enumerate(products, 1):
         cat_config = _get_cat_config(p.get('categoria', ''))
         
@@ -226,7 +224,7 @@ def generate_inventory_html(products: List[Dict[str, Any]]) -> str:
         
         img_url = p.get('image_url')
         if img_url:
-            local_path = os.path.join(base_public, img_url.lstrip("/\\"))
+            local_path = img_url
             b64 = _image_to_base64(local_path)
             if b64:
                 image_html = f'<div class="img-container"><img src="{b64}" alt="{p.get("nombre_producto", "")}" /></div>'
