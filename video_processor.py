@@ -149,7 +149,9 @@ Cada objeto de la lista debe seguir exactamente este esquema:
   "metodo_conteo": "conteo_directo | frentes_x_profundidad | muestreo_por_capas",
   "confianza": "Alta | Media | Baja",
   "precio_visible": "S/ 0.00 o null",
-  "observaciones": "Ej. 'Parcialmente tapado por etiqueta'"
+  "observaciones": "Ej. 'Parcialmente tapado por etiqueta'",
+  "perecible": true,
+  "fecha_caducidad": "DD/MM/YYYY o null"
 }
 RESTRICCIONES DE FORMATO (OBLIGATORIO)
 Responde únicamente con el arreglo JSON válido. Nada de texto antes, después, ni bloques de markdown (```json).
@@ -251,7 +253,9 @@ def analyze_website_with_gemini(url: str) -> str:
       "categoria": "Ej. Herramientas",
       "cantidad_estimada": "Ej. 1",
       "confianza": "Alta/Media/Baja",
-      "image_url": "Coloca aquí la [IMAGEN_URL: ...] que le corresponde al producto, si la encontraste cerca del texto."
+      "image_url": "Coloca aquí la [IMAGEN_URL: ...] que le corresponde al producto, si la encontraste cerca del texto.",
+      "perecible": true,
+      "fecha_caducidad": "DD/MM/YYYY o null"
     }}
     No agregues ningún texto fuera del JSON (ni formato markdown).
     """
@@ -308,7 +312,9 @@ Cada objeto debe tener esta estructura:
   "categoria": "Categoría del producto",
   "cantidad_estimada": "Número estimado de unidades visibles",
   "zona": "Nombre de la zona donde está el producto",
-  "confianza": "Alta/Media/Baja"
+  "confianza": "Alta/Media/Baja",
+  "perecible": true,
+  "fecha_caducidad": "DD/MM/YYYY o null"
 }}
 
 No agregues ningún texto fuera del JSON (ni formato markdown ni explicaciones).

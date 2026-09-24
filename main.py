@@ -350,6 +350,26 @@ def export_html_endpoint(req: ExportRequest):
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=error_msg)
 
+# --- DRAFT INVENTORY ---
+from db import save_draft_inventory, get_draft_inventory
+
+class DraftInventoryRequest(BaseModel):
+    products: List[Any]
+
+@app.get("/api/inventory/draft")
+def get_draft_endpoint(current_user: models.User = Depends(auth.get_current_user)):
+    """Obtiene el inventario borrador guardado en Supabase."""
+    products = get_draft_inventory(current_user.email)
+    return {"status": "success", "data": products}
+
+@app.post("/api/inventory/draft")
+def save_draft_endpoint(req: DraftInventoryRequest, current_user: models.User = Depends(auth.get_current_user)):
+    """Sincroniza el inventario acumulado actual del frontend a Supabase."""
+    success = save_draft_inventory(current_user.email, req.products)
+    if not success:
+        raise HTTPException(status_code=500, detail="Error al guardar el borrador en Supabase.")
+    return {"status": "success", "message": "Borrador sincronizado exitosamente."}
+
 # --- BILLING & CREDITS ---
 class RechargeRequest(BaseModel):
     amount: int

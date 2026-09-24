@@ -65,4 +65,54 @@ def match_products_with_db(products: list) -> list:
         except Exception as e:
             print(f"[SUPABASE] Error buscando producto '{nombre}': {e}")
             
+            
     return products
+
+def save_draft_inventory(user_id: str, products: list) -> bool:
+    """Guarda o actualiza productos en el inventario borrador del usuario."""
+    supabase = get_supabase()
+    if not supabase: return False
+    
+    # Simple strategy: insert all. In a real app, we might upsert based on nombre_producto + user_id.
+    # For now, we will just insert them. The frontend handles merging locally before sending, 
+    # but to be robust, we can clear the draft and re-insert, OR upsert.
+    # We will do a full replace for simplicity of the draft sync:
+    try:
+        supabase.table("inventario_borrador").delete().eq("user_id", user_id).execute()
+        
+        if not products:
+            return True
+            
+        rows = []
+        for p in products:
+            rows.append({
+                "user_id": user_id,
+                "nombre_producto": p.get("nombre_producto", "Sin nombre"),
+                "marca": p.get("marca"),
+                "categoria": p.get("categoria"),
+                "cantidad_estimada": int(p.get("cantidad_estimada", 0)),
+                "unidad_medida": p.get("unidad_medida"),
+                "precio_visible": p.get("precio_visible"),
+                "ubicacion": p.get("ubicacion"),
+                "confianza": p.get("confianza"),
+                "image_url": p.get("image_url"),
+                "perecible": bool(p.get("perecible", False)),
+                "fecha_caducidad": p.get("fecha_caducidad") if p.get("fecha_caducidad") != "null" else None
+            })
+        supabase.table("inventario_borrador").insert(rows).execute()
+        return True
+    except Exception as e:
+        print(f"[SUPABASE] Error guardando borrador: {e}")
+        return False
+
+def get_draft_inventory(user_id: str) -> list:
+    """Obtiene el inventario borrador del usuario."""
+    supabase = get_supabase()
+    if not supabase: return []
+    try:
+        # Sort by updated time to show latest
+        response = supabase.table("inventario_borrador").select("*").eq("user_id", user_id).order("fecha_actualizacion", desc=True).execute()
+        return response.data if response.data else []
+    except Exception as e:
+        print(f"[SUPABASE] Error obteniendo borrador: {e}")
+        return []
