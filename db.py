@@ -93,6 +93,7 @@ def save_draft_inventory(user_id: str, products: list) -> bool:
                 "cantidad_estimada": int(p.get("cantidad_estimada", 0)),
                 "unidad_medida": p.get("unidad_medida"),
                 "precio_visible": p.get("precio_visible"),
+                "costo_unitario": p.get("costo_unitario"),
                 "ubicacion": p.get("ubicacion"),
                 "confianza": p.get("confianza"),
                 "image_url": p.get("image_url"),
